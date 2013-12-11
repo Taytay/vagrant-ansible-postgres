@@ -1,12 +1,14 @@
 ---
 
-#Note that we are not using update_cache here on all of these
-#If you want to update your cache, you can do it before you start calling these apt methods
-
 #Got from:http://blog.wercker.com/2013/11/25/django-16-part3.html
-#TODO: Make this idempotent so that it doesn't run every time
+- name: test for locale settings...
+  command: locale
+  register: locale_output
+  changed_when: False
+
 - name: set locale to {{locale}}
-  action: command /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
+  command: /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}} LANGUAGE={{locale}}
+  when: "'LC_ALL={{locale}}' not in locale_output.stdout"
   sudo: yes
 
 - name: install prerequisites
