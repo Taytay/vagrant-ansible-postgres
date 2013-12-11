@@ -1,0 +1,25 @@
+---
+
+#Note that I don't call update_cache=true for all of these
+#You can do that in a playbook before this one if you want
+
+- name: update apt cache (if out of date)
+  #Updates it only every 4 hours
+  apt: update_cache=yes cache_valid_time={{ 60*60*4 }}
+  sudo: true
+
+# Needed for add-apt-repository
+- name: Install python-software-properties
+  apt: pkg=python-software-properties state=latest
+  tags:
+    - apt
+
+- name: Add repository key
+  apt_key: data="{{ lookup('file', 'ACCC4CF8.asc') }}"  state=present
+  tags:
+    - apt
+
+- name: Add PostgreSQL repository
+  apt_repository: repo='{{ postgresql.repo }}' state=present
+  tags:
+    - apt

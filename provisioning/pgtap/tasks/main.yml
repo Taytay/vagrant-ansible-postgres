@@ -1,0 +1,52 @@
+- name: install prerequisites
+  sudo: true
+  apt: name={{ item }} state=installed
+  with_items:
+    - make # for making pgtap
+    - postgresql-server-dev-{{ postgresql.version }}  # for making pgtap
+    - libtap-parser-sourcehandler-pgtap-perl #Gives us the pg_prove command
+  tags:
+    - pgtap
+
+- name: download pgtap
+  #Can't use this standard url because we're not pulling from an official release
+  #get_url: url=https://github.com/theory/pgtap/archive/v{{ pgtap_version }}.tar.gz/ dest=/tmp/pgtap_{{pgtap_version}}.tar.gz
+  #We have to get a particular version of pgtap because there is a bug in the Makefile of 0.93.0:
+  #https://github.com/theory/pgtap/issues/52
+  get_url: url=https://github.com/theory/pgtap/archive/aa8babf2ac018704454c84cb5edb9c415900cf23.tar.gz/ dest=/tmp/pgtap_{{pgtap_version}}.tar.gz
+  register: get_url_result
+  tags: pgtap
+
+- name: unzip pgtap
+  shell: chdir="/tmp" creates="/tmp/pgtap-{{pgtap_version}}/" mkdir -p pgtap-{{pgtap_version}} && tar -C pgtap-{{pgtap_version}}/ --strip 1 -xvf pgtap_{{pgtap_version}}.tar.gz
+  register: unzip_result
+  tags: pgtap
+
+- name: make
+  #command: chdir="/tmp/pgtap-{{pgtap_version}}" creates="sql/pgtap-core--{{pgtap_version}}.sql" make
+  command: chdir="/tmp/pgtap-{{pgtap_version}}" make
+  when: unzip_result.changed
+  register: make_result
+  tags: pgtap
+
+- name: make installcheck
+  command: make installcheck PGUSER=postgres chdir="/tmp/pgtap-{{ pgtap_version }}"
+  when: make_result.changed
+  tags: pgtap
+
+- name: make install
+  command: make install PGUSER=postgres chdir="/tmp/pgtap-{{ pgtap_version }}"
+  when: make_result.changed
+  tags: pgtap
+
+- name: test to see if is pgtap is installed
+  command: psql -c "SELECT extversion FROM pg_extension WHERE extname = 'pgtap'" -t -A
+  sudo_user: postgres
+  register: pgtap_installed_version
+  tags: pgtap
+
+- name: install in postgres if the version is out of date
+  command: psql -c 'DROP EXTENSION IF EXISTS pgtap; CREATE EXTENSION pgtap;'
+  sudo_user: postgres
+  when: "'{{pgtap_version}}ff' not in pgtap_installed_version.stdout"
+  tags: pgtap

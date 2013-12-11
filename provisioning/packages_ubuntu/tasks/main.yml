@@ -1,0 +1,23 @@
+---
+# Tasks to install required packages for awx
+
+- name: update apt cache (if out of date)
+  #Updates it only every 4 hours
+  apt: update_cache=yes cache_valid_time={{ 60*60*4 }}
+  sudo: true
+
+- name: install required packages via apt
+  sudo: true
+  #This installs/upgrades every item
+  apt: name={{ item }} state=latest
+  with_items:
+    # - apache2
+    # - libapache2-mod-wsgi
+    #- python-psycopg2
+    # - python-setuptools
+    # - python-ldap
+    # - supervisor
+    - git
+    #- subversion
+    #- mercurial
+

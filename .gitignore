@@ -1,0 +1,6 @@
+#Mac OS
+.DS_Store
+
+#Vagrant instance-specific stuff
+.vagrant
+*_inventory_database
