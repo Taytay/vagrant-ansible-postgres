@@ -11,6 +11,11 @@
   when: "'LC_ALL={{locale}}' not in locale_output.stdout"
   sudo: yes
 
+- name: update apt cache (if out of date)
+  #Updates it only every 4 hours
+  apt: update_cache=yes cache_valid_time={{ 60*60*4 }}
+  sudo: true
+
 - name: install prerequisites
   sudo: true
   #This installs/upgrades every item
