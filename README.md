@@ -17,7 +17,9 @@ If Ansible is not installed on the host machine, or if the host is a Windows mac
 $ vagrant up
 ```
 
-Your Vagrant box will now be running Postgresql, on localhost:5432. You can modify playbook variables inside of `provisioning/group_vars/all`.
+Your Vagrant box will now be running Postgresql, on localhost:5432.
+The default user/password is: `pgsuper/password`
+You can modify this and other playbook variables variables inside of `provisioning/group_vars/all`.
 
 ## License
 
