@@ -48,5 +48,5 @@
 - name: install in postgres if the version is out of date
   command: psql -c 'DROP EXTENSION IF EXISTS pgtap; CREATE EXTENSION pgtap;'
   sudo_user: postgres
-  when: "'{{pgtap_version}}ff' not in pgtap_installed_version.stdout"
+  when: "'{{pgtap_version}}' not in pgtap_installed_version.stdout"
   tags: pgtap
