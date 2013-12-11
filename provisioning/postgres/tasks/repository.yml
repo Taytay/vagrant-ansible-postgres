@@ -15,11 +15,21 @@
     - apt
 
 - name: Add repository key
-  apt_key: data="{{ lookup('file', 'ACCC4CF8.asc') }}"  state=present
+  apt_key: id=ACCC4CF8 url='https://www.postgresql.org/media/keys/ACCC4CF8.asc' state=present
   tags:
     - apt
 
 - name: Add PostgreSQL repository
   apt_repository: repo='{{ postgresql.repo }}' state=present
+  register: added_postgres_repo
   tags:
     - apt
+
+- name: Update apt cache if we just installed the Postgres repo
+  apt: update_cache=yes
+  sudo: true
+  when: added_postgres_repo.changed
+  tags:
+    - apt
+
+
