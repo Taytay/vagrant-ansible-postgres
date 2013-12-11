@@ -71,13 +71,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     if can_use_vagrant_provisioning?
       #if we have ansible installed, let's use it from our host:
-      puts "Ansible found on host. Using it for provisioning..."
       cfg.vm.provision :ansible do |ansible|
         ansible.playbook = "provisioning/playbook.yml"
         ansible.verbose = 'v' #Use more v's if you want more. Up to 3.
       end
     else
-      puts "Ansible not found on host. Will use Ansible from with the guest VM..."
       config.vm.provision :shell,
         :inline => $DATABASE_PROVISIONING_SCRIPT
     end
