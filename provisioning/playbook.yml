@@ -6,4 +6,5 @@
   roles:
     - { role: packages_ubuntu }
     - { role: postgres}
-    - { role: pgtap}
+    #Uncomment if you want to install pgtap too:
+    #- { role: pgtap}
