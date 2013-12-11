@@ -6,18 +6,19 @@
   apt: update_cache=yes cache_valid_time={{ 60*60*4 }}
   sudo: true
 
-- name: install required packages via apt
-  sudo: true
-  #This installs/upgrades every item
-  apt: name={{ item }} state=latest
-  with_items:
-    # - apache2
-    # - libapache2-mod-wsgi
-    #- python-psycopg2
-    # - python-setuptools
-    # - python-ldap
-    # - supervisor
-    - git
-    #- subversion
-    #- mercurial
+#None of this is necessary for our postgres install:
+# - name: install required packages via apt
+#   sudo: true
+#   #This installs/upgrades every item
+#   apt: name={{ item }} state=latest
+#   with_items:
+#     # - apache2
+#     # - libapache2-mod-wsgi
+#     # - python-psycopg2
+#     # - python-setuptools
+#     # - python-ldap
+#     # - supervisor
+#     # - git
+#     #- subversion
+#     #- mercurial
 
