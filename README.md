@@ -10,6 +10,7 @@ If Ansible is not installed on the host machine, or if the host is a Windows mac
 * Vagrant
 * VirtualBox
 * Ansible (Optional: if not installed, will be installed in the Vagrant box and run locally)
+* `nfsd` on the host, if host is Linux. (Hat tip to [davidemoro](https://github.com/Taytay/vagrant-ansible-postgres/issues/1))
 
 ## Usage
 
